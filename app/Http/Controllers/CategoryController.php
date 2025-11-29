@@ -19,6 +19,8 @@ class CategoryController extends Controller
             'category_type' => 'required|string|max:255',
         ]);
         Category::create($validated);
-        return Redirect::route('category.index');
+        return redirect()
+            ->route('categories')
+            ->with('success', 'Category added successfully!');
     }
 }
