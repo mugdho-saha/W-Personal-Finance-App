@@ -10,7 +10,8 @@ use Inertia\Inertia;
 class CategoryController extends Controller
 {
     public function index(){
-        return Inertia::render('Category/Index', []);
+        $categories = Category::orderBy('created_at', 'desc')->get();
+        return Inertia::render('Category/Index', compact('categories'));
     }
 
     public function store(Request $request){
@@ -22,5 +23,15 @@ class CategoryController extends Controller
         return redirect()
             ->route('categories')
             ->with('success', 'Category added successfully!');
+    }
+
+    public function destroy($category_id)
+    {
+        $category = Category::findOrFail($category_id);
+        $category->delete();
+
+        return redirect()
+            ->route('categories')
+            ->with('success', 'Category deleted successfully!');
     }
 }

@@ -19,6 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     /*category controllers*/
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::post('/categories/{category_id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
 
 require __DIR__.'/settings.php';

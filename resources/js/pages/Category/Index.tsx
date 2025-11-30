@@ -9,8 +9,18 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { ShieldAlert } from 'lucide-react';
+import {ShieldAlert, Pencil} from 'lucide-react';
 import { route } from 'ziggy-js';
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import { Trash2 } from 'lucide-react';
 
 // Breadcrumbs for layout
 const breadcrumbs: BreadcrumbItem[] = [
@@ -20,10 +30,24 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+
+interface Category {
+    category_id: number,
+    category_name: string,
+    category_type: string,
+    status: number
+}
+
+interface PageProps{
+    flash: {
+        message?: string
+    },
+    categories: Category[]
+}
 export default function Index() {
     const [showModal, setShowModal] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
-    const { flash } = usePage().props;
+    const { categories, flash } = usePage().props;
 
     // Inertia useForm
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -43,6 +67,16 @@ export default function Index() {
             }
         });
     };
+
+    const handleDelete = (category_id:number, category_name:string) => {
+        if(confirm(`Do you want to delete ${category_name}?`)){
+            post(route('categories.destroy',category_id),{
+                onSuccess: () => {
+                    setSuccessMessage('Category deleted successfully!');
+                }
+            })
+        }
+    }
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -119,6 +153,44 @@ export default function Index() {
                         </Button>
                     </form>
                 </Modal>
+
+
+                <div className='m-4'>
+                    {categories.length > 0 && (
+                        <Table>
+                            <TableCaption>A list of your recent categories.</TableCaption>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="w-[100px]">Sl No</TableHead>
+                                    <TableHead>Category Name</TableHead>
+                                    <TableHead>Category Type</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead className="text-right">Action</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {categories.map((category, index) => (
+                                    <TableRow key={category.id}>
+                                        <TableCell className="font-medium">{index + 1}</TableCell>
+                                        <TableCell>{category.category_name}</TableCell>
+                                        <TableCell>{category.category_type}</TableCell>
+                                        <TableCell>{category.status}</TableCell>
+                                        <TableCell className="text-right">
+                                            <Button onClick={()=> handleDelete(category.category_id, category.category_name)} className='bg-red-500 hover:bg-red-700'>
+                                                <Trash2></Trash2>
+                                            </Button>
+                                            <Button className='bg-amber-500 hover:bg-amber-700 ms-1'>
+                                                <Pencil></Pencil>
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+
+                            </TableBody>
+                        </Table>
+                    )}
+                </div>
+
 
             </div>
         </AppLayout>
