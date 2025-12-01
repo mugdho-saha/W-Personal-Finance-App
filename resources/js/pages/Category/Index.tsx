@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { categories } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import {Head, Link, useForm, usePage} from '@inertiajs/react';
 import Modal from "@/components/Modal";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -40,7 +40,7 @@ interface Category {
 
 interface PageProps{
     flash: {
-        message?: string
+        success?: string
     },
     categories: Category[]
 }
@@ -90,6 +90,14 @@ export default function Index() {
                         <ShieldAlert />
                         <AlertTitle>Success</AlertTitle>
                         <AlertDescription>{successMessage}</AlertDescription>
+                    </Alert>
+                )}
+
+                {flash?.success && (
+                    <Alert className="mb-4">
+                        <ShieldAlert />
+                        <AlertTitle>Success</AlertTitle>
+                        <AlertDescription>{flash.success}</AlertDescription>
                     </Alert>
                 )}
 
@@ -176,11 +184,14 @@ export default function Index() {
                                         <TableCell>{category.category_type}</TableCell>
                                         <TableCell>{category.status}</TableCell>
                                         <TableCell className="text-right">
+                                            <Link href={route('categories.edit',category.category_id)}>
+                                                <Button className='bg-amber-500 hover:bg-amber-700 me-2'>
+                                                    <Pencil></Pencil>
+                                                </Button>
+                                            </Link>
+
                                             <Button onClick={()=> handleDelete(category.category_id, category.category_name)} className='bg-red-500 hover:bg-red-700'>
                                                 <Trash2></Trash2>
-                                            </Button>
-                                            <Button className='bg-amber-500 hover:bg-amber-700 ms-1'>
-                                                <Pencil></Pencil>
                                             </Button>
                                         </TableCell>
                                     </TableRow>
@@ -190,8 +201,6 @@ export default function Index() {
                         </Table>
                     )}
                 </div>
-
-
             </div>
         </AppLayout>
     );
