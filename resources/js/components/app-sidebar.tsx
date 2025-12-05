@@ -13,8 +13,9 @@ import {
 import {categories, dashboard} from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, ChartBarStacked } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, ChartBarStacked, Calculator } from 'lucide-react';
 import AppLogo from './app-logo';
+import {route} from "ziggy-js";
 
 const mainNavItems: NavItem[] = [
     {
@@ -26,6 +27,11 @@ const mainNavItems: NavItem[] = [
         title: 'Categories',
         href: categories(),
         icon: ChartBarStacked ,
+    },
+    {
+        title: 'Income-Expense',
+        href: route('income-expense.index'),
+        icon: Calculator ,
     },
 ];
 
